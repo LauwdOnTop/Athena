@@ -4125,6 +4125,74 @@ function Library:CreateWindow(...)
 	return Window;
 end;
 
+function Library:createButton(text, position, callback)
+	local buttonOuter = Library:Create('Frame', {
+		BorderColor3 = Color3.new(0, 0, 0);
+		Position = position;
+		Size = UDim2.new(0, 77, 0, 30);
+		ZIndex = 200;
+		Visible = true;
+		Parent = ScreenGui;
+	});
+
+	local buttonInner = Library:Create('Frame', {
+		BackgroundColor3 = Library.MainColor;
+		BorderColor3 = Library.AccentColor;
+		BorderMode = Enum.BorderMode.Inset;
+		Size = UDim2.new(1, 0, 1, 0);
+		ZIndex = 201;
+		Parent = buttonOuter;
+	});
+
+	Library:AddToRegistry(buttonInner, {
+		BorderColor3 = 'AccentColor';
+	});
+
+	local buttonInnerFrame = Library:Create('Frame', {
+		BackgroundColor3 = Color3.new(1, 1, 1);
+		BorderSizePixel = 0;
+		Position = UDim2.new(0, 1, 0, 1);
+		Size = UDim2.new(1, -2, 1, -2);
+		ZIndex = 202;
+		Parent = buttonInner;
+	});
+
+	local buttonGradient = Library:Create('UIGradient', {
+		Color = ColorSequence.new({
+			ColorSequenceKeypoint.new(0, Library:GetDarkerColor(Library.MainColor)),
+			ColorSequenceKeypoint.new(1, Library.MainColor),
+		});
+		Rotation = -90;
+		Parent = buttonInnerFrame;
+	});
+
+	Library:AddToRegistry(buttonGradient, {
+		Color = function()
+			return ColorSequence.new({
+				ColorSequenceKeypoint.new(0, Library:GetDarkerColor(Library.MainColor)),
+				ColorSequenceKeypoint.new(1, Library.MainColor),
+			});
+		end
+	});
+
+	local button = Library:Create('TextButton', {
+		Position = UDim2.new(0, 5, 0, 0);
+		Size = UDim2.new(1, -4, 1, 0);
+		BackgroundTransparency = 1;
+		Font = Library.Font;
+		Text = text;
+		TextColor3 = Library.FontColor;
+		TextSize = 14;
+		TextXAlignment = Enum.TextXAlignment.Left;
+		TextStrokeTransparency = 0;
+		ZIndex = 203;
+		Parent = buttonInnerFrame;
+	});
+
+	button.MouseButton1Down:Connect(callback)
+	return buttonOuter
+end
+
 local function OnPlayerChange()
 	local PlayerList = GetPlayersString();
 
